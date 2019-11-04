@@ -200,7 +200,11 @@ class Client(etcd.Client):
                 raise etcd.EtcdWatchTimedOut("Watch timed out: {0}".format(e), cause=e)
             logger.error("Request to server %s failed: %r", self._base_uri, e)
             logger.info("Reconnection allowed, looking for another server.")
-            self._base_uri = self._next_server(cause=e)
+            try:
+                self._base_uri = self._next_server(cause=e)
+            except etcd.EtcdConnectionFailed as e:
+                logger.error(e)
+                time.sleep(1)
             response = False
         return response
 
