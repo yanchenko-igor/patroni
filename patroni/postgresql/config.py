@@ -6,6 +6,7 @@ import socket
 import stat
 import time
 
+from patroni.exceptions import PatroniConfigError
 from requests.structures import CaseInsensitiveDict
 from six.moves.urllib_parse import urlparse, parse_qsl, unquote
 
@@ -739,7 +740,12 @@ class ConfigHandler(object):
 
     def get_server_parameters(self, config):
         parameters = config['parameters'].copy()
-        listen_addresses, port = split_host_port(config['listen'], 5432)
+        try:
+            listen_adresses, port = split_host_port(config['listen'], 5432)
+        except Exception:
+            raise PatroniConfigError('Invalid "postgresql" config: expected <HOST>:<PORT> for "listen", but got "{0}"'
+                             .format(config['listen']))
+
         parameters.update(cluster_name=self._postgresql.scope, listen_addresses=listen_addresses, port=str(port))
         if config.get('synchronous_mode', False):
             if self._synchronous_standby_names is None:

@@ -30,6 +30,9 @@ class PostgresConnectionException(PostgresException):
 class WatchdogError(PatroniException):
     pass
 
+class PatroniConfigError(PatroniException):
+    pass
+
 class ConfigParseException(PatroniException):
     def __init__(self, config, msg):
         self.config = config

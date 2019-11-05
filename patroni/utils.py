@@ -4,7 +4,7 @@ import re
 import time
 
 from dateutil import tz
-from patroni.exceptions import PatroniException, ConfigParseException
+from patroni.exceptions import PatroniException, ConfigParseException, PatroniConfigError
 
 tzutc = tz.tzutc()
 
@@ -416,5 +416,5 @@ def cluster_as_json(cluster):
 def apply_config(cb, config):
     try:
         return cb()
-    except ValueError as e:
+    except PatroniConfigError as e:
         raise ConfigParseException(config, e) from None

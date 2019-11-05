@@ -10,6 +10,7 @@ import os
 import six
 import socket
 
+from patroni.exceptions import PatroniConfigError
 from patroni.postgresql import PostgresConnectionException
 from patroni.postgresql.misc import postgres_version_to_int, PostgresException
 from patroni.utils import deep_compare, parse_bool, patch_config, Retry, \
@@ -562,7 +563,7 @@ class RestApiServer(ThreadingMixIn, HTTPServer, Thread):
         try:
             host, port = split_host_port(listen, None)
         except Exception:
-            raise ValueError('Invalid "restapi" config: expected <HOST>:<PORT> for "listen", but got "{0}"'
+            raise PatroniConfigError('Invalid "restapi" config: expected <HOST>:<PORT> for "listen", but got "{0}"'
                              .format(listen))
 
         reloading_config = self.__listen is not None  # changing config in runtime
@@ -596,7 +597,7 @@ class RestApiServer(ThreadingMixIn, HTTPServer, Thread):
 
     def reload_config(self, config):
         if 'listen' not in config:  # changing config in runtime
-            raise ValueError('Can not find "restapi.listen" config')
+            raise PatroniConfigError('Can not find "restapi.listen" config')
 
         ssl_options = {n: config[n] for n in ('certfile', 'keyfile', 'cafile') if n in config}
 
