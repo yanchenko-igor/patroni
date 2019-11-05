@@ -1,3 +1,5 @@
+import yaml
+
 class PatroniException(Exception):
 
     """Parent class for all kind of exceptions related to selected distributed configuration store"""
@@ -27,3 +29,11 @@ class PostgresConnectionException(PostgresException):
 
 class WatchdogError(PatroniException):
     pass
+
+class ConfigParseException(PatroniException):
+    def __init__(self, config, msg):
+        self.config = config
+        self.msg = msg
+
+    def __str__(self):
+        return "\n{1}\n\n{0}".format(yaml.dump(self.config.copy()), self.msg)

@@ -4,7 +4,7 @@ import re
 import time
 
 from dateutil import tz
-from patroni.exceptions import PatroniException
+from patroni.exceptions import PatroniException, ConfigParseException
 
 tzutc = tz.tzutc()
 
@@ -412,3 +412,9 @@ def cluster_as_json(cluster):
         if cluster.failover.candidate:
             ret['scheduled_switchover']['to'] = cluster.failover.candidate
     return ret
+
+def apply_config(cb, config):
+    try:
+        return cb()
+    except ValueError as e:
+        raise ConfigParseException(config, e) from None

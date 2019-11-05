@@ -12,6 +12,7 @@ class Patroni(object):
     def __init__(self):
         from patroni.api import RestApiServer
         from patroni.config import Config
+        from patroni.utils import apply_config
         from patroni.dcs import get_dcs
         from patroni.ha import Ha
         from patroni.log import PatroniLogger
@@ -30,9 +31,9 @@ class Patroni(object):
         self.watchdog = Watchdog(self.config)
         self.load_dynamic_configuration()
 
-        self.postgresql = Postgresql(self.config['postgresql'])
-        self.api = RestApiServer(self, self.config['restapi'])
-        self.request = PatroniRequest(self.config, True)
+        self.postgresql = apply_config(lambda:Postgresql(self.config['postgresql']), {"postgresql": self.config['postgresql']})
+        self.api = apply_config(lambda:RestApiServer(self, self.config['restapi']), {"restapi": self.config['restapi']})
+        self.request = apply_config(lambda:PatroniRequest(self.config, True), {"ctl": self.config['ctl']})
         self.ha = Ha(self)
 
         self.tags = self.get_tags()
