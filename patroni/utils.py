@@ -386,7 +386,8 @@ def cluster_as_json(cluster):
 
         conn_kwargs = m.conn_kwargs()
         member = {'name': m.name, 'host': conn_kwargs['host'], 'port': int(conn_kwargs['port']),
-                  'role': role, 'state': m.data.get('state', ''), 'api_url': m.api_url}
+                  'role': role, 'state': m.data.get('state', ''), 'api_url': m.api_url,
+                  'conn_url': m.data.get('conn_url', '')}
         optional_attributes = ('timeline', 'pending_restart', 'scheduled_restart', 'tags')
         member.update({n: m.data[n] for n in optional_attributes if n in m.data})
 
