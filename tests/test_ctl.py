@@ -510,7 +510,7 @@ class TestCtl(unittest.TestCase):
         self.assertRaises(PatroniCtlException, apply_config_changes, before_editing, config, ['a'])
 
     @patch('sys.stdout.isatty', return_value=False)
-    @patch('cdiff.markup_to_pager')
+    @patch('ydiff.markup_to_pager')
     def test_show_diff(self, mock_markup_to_pager, mock_isatty):
         show_diff("foo:\n  bar: 1\n", "foo:\n  bar: 2\n")
         mock_markup_to_pager.assert_not_called()

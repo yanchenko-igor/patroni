@@ -10,5 +10,5 @@ prettytable>=0.7
 tzlocal
 python-dateutil
 psutil>=2.0.0
-cdiff
+ydiff
 kubernetes>=2.0.0,<=10.0.1,!=4.0.*,!=5.0.*
